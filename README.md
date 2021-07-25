@@ -18,12 +18,12 @@ To reproduce IrEne (full model) results, run:
 
 ```bash
 # For device-1 (qpc)
-python ml_level_crossvalidation.py irene_qpc
-python non_ml_level_crossvalidation.py irene_qpc # Run after ml_level is complete
+python ml_level_crossvalidation.py irene_device_1
+python non_ml_level_crossvalidation.py irene_device_1 # Run after ml_level is complete
 
 # For device-2 (jpc)
-python ml_level_crossvalidation.py irene_jpc
-python non_ml_level_crossvalidation.py irene_jpc # Run after ml_level is complete
+python ml_level_crossvalidation.py irene_device_2
+python non_ml_level_crossvalidation.py irene_device_2 # Run after ml_level is complete
 ```
 
 ## Reproducing all the Results:

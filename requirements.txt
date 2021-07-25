@@ -1,4 +1,4 @@
-transformers=4.2.2
+transformers==4.2.2
 torch==1.7.1
 tqdm
 scikit-learn
@@ -6,3 +6,4 @@ pandas
 dataframe
 numpy
 graphviz
+patchy
