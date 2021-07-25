@@ -113,7 +113,7 @@ By default, it takes the following config:
 ```
 but you can change it by passing `--config_filepath /path/to/my_config.json`.
 
-See **TODO-docstring-link** for more explanation of these configs.
+See docstrings of `train_non_ml_level_model` and `RecursiveTreeComputation` in [lib/non_ml_level.py](https://github.com/StonyBrookNLP/irene/blob/master/lib/non_ml_level.py) for more explanation of these configs.
 
 Once you've the trained model, you can generate predictions as follows:
 
