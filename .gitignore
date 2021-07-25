@@ -131,6 +131,5 @@ plots/*
 serialized_trees/
 serialization_directory/
 model_directory
-datasets
 nohup_logs
 archive
