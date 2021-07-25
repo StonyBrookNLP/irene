@@ -1,0 +1,7 @@
+tqdm
+scikit-learn
+pandas
+numpy
+black
+torch==1.7.1
+transformers==4.2.2
