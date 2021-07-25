@@ -41,6 +41,15 @@ class WeightingModel(torch.nn.Module):
 class RecursiveTreeComputation(torch.nn.Module):
     """
     Main PyTorch module of IrEne model.
+
+    num_features: number of features each node is expected to have.
+    weighting_setting: how to scale weights of child-node energies to combine for the parent node.
+        exact_one: non-learnable and fixed as 1.
+        free: freely learnable scales/weights.
+        close_to_one: learnable but regularized to be close to 1.
+    tanh_scalar: See taug in equation 1 in paper. Only applicable when weighting_setting is close_to_one.
+    training_strategy: can be in "end2end", "stepwise", "unstructured", "none" (See paper for details.)
+    normalize_loss_scale: Whether to normalize the loss of nodes based on the scales of their absolute energies.
     """
 
     def __init__(
@@ -137,6 +146,19 @@ def train_non_ml_level_model(
     training_strategy: str,
     normalize_loss_scale: bool,
 ) -> Tuple:
+    """
+    Training loop for the main model.
+
+    train_trees: List of `TreeNode` objects to train on.
+    standardize_features: whether to normalize/standardize features or not.
+    polynomial_features: whether to augment features with their polynomial variations.
+    weighting_setting: how to scale weights of child-node energies to combine for the parent node.
+        exact_one: non-learnable and fixed as 1.
+        free: freely learnable scales/weights.
+        close_to_one: learnable but regularized to be close to 1.
+    tanh_scalar: See taug in equation 1 in paper. Only applicable when weighting_setting is close_to_one.
+    normalize_loss_scale: Whether to normalize the loss of nodes based on the scales of their absolute energies.
+    """
 
     train_trees, non_ml_transformations = TreeNode.prepare_for_non_ml_training(
         train_trees,
