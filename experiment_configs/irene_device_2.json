@@ -1,0 +1,16 @@
+{
+    "ml_experiment_name": "irene_device_2",
+    "non_ml_experiment_name": "irene_device_2",
+
+    "device_name": "device_2",
+    "feature_sets": ["model_specs", "resource_utilization"],
+
+    "normalize_loss_scale": true,
+    "polynomial_features": true,
+    "feature_sets": [
+        "model_specs",
+        "resource_utilization"
+    ],
+    "training_strategy": "end2end",
+    "save_nodes": false
+}

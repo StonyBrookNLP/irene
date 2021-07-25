@@ -1,0 +1,7 @@
+{
+    "device_name": "device_2",
+    "feature_sets": [
+        "model_specs"
+    ],
+    "ml_experiment_name": "device_name__device_2___feature_sets__model_specs"
+}

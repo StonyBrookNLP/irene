@@ -1,0 +1,13 @@
+{
+    "device_name": "device_1",
+    "normalize_loss_scale": true,
+    "polynomial_features": true,
+    "feature_sets": [
+        "model_specs",
+        "resource_utilization"
+    ],
+    "training_strategy": "piecewise",
+    "save_nodes": true,
+    "ml_experiment_name": "device_name__device_1___feature_sets__model_specs-resource_utilization",
+    "non_ml_experiment_name": "device_name__device_1___feature_sets__model_specs-resource_utilization___normalize_loss_scale__true___polynomial_features__true___save_nodes__true___training_strategy__piecewise"
+}
