@@ -131,6 +131,5 @@ dmypy.json
 plots/*
 serialized_trees/
 serialization_directory/
-datasets
 nohup_logs
 archive
