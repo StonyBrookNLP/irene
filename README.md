@@ -1,7 +1,7 @@
 
 # IrEne: Interpretable Energy Prediction for Transformers
 
-This repository contains associated data and code for our [ACL'21 paper](https://arxiv.org/pdf/2106.01199.pdf). 
+This repository contains associated data and code for our [ACL'21 paper](https://aclanthology.org/2021.acl-long.167/). 
 
 > **Disclaimer**: This is not the original code we used in the paper. We've cleaned up the code and standardized our dataset format for extensibility and usability. Retraining the models with new code and data format doesn't lead to exactly the same results, but they are very close. If you you want to reproduce our original results identically, please check `original` branch and instructions.
 
@@ -172,12 +172,19 @@ Want to look at interactive visualization of predicted energies of transformers?
 If you find this work useful, please cite it using:
 
 ```
-@misc{cao2021irene,
-   title={IrEne: Interpretable Energy Prediction for Transformers},
-   author={Qingqing Cao and Yash Kumar Lal and Harsh Trivedi and Aruna Balasubramanian and Niranjan Balasubramanian},
-   year={2021},
-   eprint={2106.01199},
-   archivePrefix={arXiv},
-   primaryClass={cs.CL}
+@inproceedings{cao-etal-2021-irene,
+    title = "{I}r{E}ne: Interpretable Energy Prediction for Transformers",
+    author = "Cao, Qingqing  and
+      Lal, Yash Kumar  and
+      Trivedi, Harsh  and
+      Balasubramanian, Aruna  and
+      Balasubramanian, Niranjan",
+    booktitle = "Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)",
+    month = aug,
+    year = "2021",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2021.acl-long.167",
+    pages = "2145--2157",
 }
 ```
