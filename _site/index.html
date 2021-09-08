@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>IrEne: Interpretable Energy Prediction for Transformers | IrEne</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="IrEne: Interpretable Energy Prediction for Transformers" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="[ACL 2021] IrEne: Interpretable Energy Prediction for Transformers" />
+<meta property="og:description" content="[ACL 2021] IrEne: Interpretable Energy Prediction for Transformers" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="IrEne" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="IrEne: Interpretable Energy Prediction for Transformers" />
+<script type="application/ld+json">
+{"@type":"WebSite","name":"IrEne","url":"http://localhost:4000/","description":"[ACL 2021] IrEne: Interpretable Energy Prediction for Transformers","headline":"IrEne: Interpretable Energy Prediction for Transformers","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=fbdec81d5f9f6602e41cf3aa0dfc2ac8779ddbdd">
+  </head>
+  <body>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">IrEne: Interpretable Energy Prediction for Transformers </h1>
+
+      <p><a href="http://lunr.cs.stonybrook.edu" title="lunr" id="lunr_logo">
+        <img src="http://lunr.cs.stonybrook.edu/sites/all/themes/lunr/images/new_lunr_logo2.png" alt="Lunr Logo">
+      </a></p>
+
+      
+        <a href="https://github.com/StonyBrookNLP/irene" class="btn">View on GitHub</a>
+        <a href="https://github.com/pages/StonyBrookNLP/irene/demo" class="btn">View Demo</a>
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      
+<h1 id="irene-interpretable-energy-prediction-for-transformers">IrEne: Interpretable Energy Prediction for Transformers</h1>
+
+<p>This repository contains associated data and code for our <a href="https://aclanthology.org/2021.acl-long.167/">ACL’21 paper</a>.</p>
+
+<blockquote>
+  <p><strong>Disclaimer</strong>: This is not the original code we used in the paper. We’ve cleaned up the code and standardized our dataset format for extensibility and usability. Retraining the models with new code and data format doesn’t lead to exactly the same results, but they are very close. If you you want to reproduce our original results identically, please check <code class="language-plaintext highlighter-rouge">original</code> branch and instructions.</p>
+</blockquote>
+
+<h2 id="installation">Installation</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda create -n irene python=3.7 -y &amp;&amp; conda activate irene
+pip install -r requirements.txt
+</code></pre></div></div>
+
+<h2 id="irene-data">IrEne Data</h2>
+
+<p>IrEne data consists of energy measurement information from 6 transformer models, each with various batch-size and sequence_length combinations. IrEne represents transformer models in a tree-based abstraction, and contains measured energy and relevant features for each node of the tree. The collected data is available for two measurement devices in <code class="language-plaintext highlighter-rouge">datasets/device_1.jsonl</code>, and <code class="language-plaintext highlighter-rouge">datasets/device_2.jsonl</code>.</p>
+
+<p>Each json line in the above files correspond to certain transformer model when run with some batch size and sequence length. The root of the json has this information in the following format:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="s">"model_name"</span><span class="p">:</span> <span class="s">"&lt;str&gt;"</span><span class="p">,</span> <span class="c1"># Eg. roberta-base
+</span>    <span class="s">"batch_size"</span><span class="p">:</span> <span class="s">"&lt;int&gt;"</span><span class="p">,</span>
+    <span class="s">"seq_len"</span><span class="p">:</span> <span class="s">"&lt;int&gt;"</span><span class="p">,</span>
+    <span class="s">"frontend_tree"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1"># /* This is a nested tree explained below */
+</span>    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">frontend_tree</code> is a nested tree, where nodes are represented in the following json format:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="s">"id"</span><span class="p">:</span> <span class="s">"&lt;str&gt;"</span><span class="p">,</span> <span class="c1"># (Universally) unique identifier for the node.
+</span>    <span class="s">"scope"</span><span class="p">:</span> <span class="s">"&lt;str&gt;"</span><span class="p">,</span> <span class="c1"># This is the path to the pytorch module/operation (eg. root.pooler.activation)
+</span>    <span class="s">"parent_name"</span><span class="p">:</span> <span class="s">"&lt;str&gt;"</span><span class="p">,</span> <span class="c1"># Scope of the parent node.
+</span>    <span class="s">"level"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="c1"># Depth of tree at which the node exists.
+</span>    <span class="s">"instance_type"</span><span class="p">:</span> <span class="s">"Embedding"</span><span class="p">,</span> <span class="c1"># python class name of the model/module/operation (eg. Embedding, BertModel etc)
+</span>    <span class="s">"type"</span><span class="p">:</span> <span class="s">"&lt;str&gt;"</span><span class="p">,</span> <span class="c1"># Type of the node (It can be model, module or ml). See paper for details.
+</span>
+    <span class="c1"># features start (See paper for more details)
+</span>    <span class="s">"num_parameters"</span><span class="p">:</span> <span class="s">"&lt;int&gt;"</span><span class="p">,</span>
+    <span class="s">"flops"</span><span class="p">:</span> <span class="s">"&lt;int&gt;"</span><span class="p">,</span>
+    <span class="s">"mem_bytes"</span><span class="p">:</span> <span class="s">"&lt;float&gt;"</span><span class="p">,</span>
+    <span class="s">"cpu"</span><span class="p">:</span> <span class="s">"&lt;float&gt;"</span><span class="p">,</span>
+    <span class="s">"mem"</span><span class="p">:</span> <span class="s">"&lt;int&gt;"</span><span class="p">,</span>
+    <span class="s">"gpu"</span><span class="p">:</span> <span class="s">"&lt;int&gt;"</span><span class="p">,</span>
+    <span class="s">"gpu_mem"</span><span class="p">:</span> <span class="s">"&lt;int&gt;"</span><span class="p">,</span>
+    <span class="s">"gpu_clk"</span><span class="p">:</span> <span class="s">"&lt;int&gt;"</span><span class="p">,</span>
+    <span class="s">"gpu_mem_clk"</span><span class="p">:</span> <span class="s">"&lt;int&gt;"</span><span class="p">,</span>
+    <span class="s">"times_mean"</span><span class="p">:</span> <span class="s">"&lt;float&gt;"</span><span class="p">,</span>
+    <span class="s">"gpu_energy_mean"</span><span class="p">:</span> <span class="s">"&lt;float&gt;"</span><span class="p">,</span>
+    <span class="c1"># features end
+</span>
+    <span class="c1"># Energies
+</span>    <span class="s">"ground_truth_energy"</span><span class="p">:</span> <span class="s">"&lt;float&gt;"</span><span class="p">,</span> <span class="c1"># Measured energy in Joules.
+</span>    <span class="c1"># "predicted_energy": "&lt;float&gt;" # This key is won't be present, evaluation expects this to be filled in for each node.
+</span>
+    <span class="c1"># Children Info
+</span>    <span class="s">"child_nodes_obj"</span><span class="p">:</span> <span class="p">[</span> <span class="c1"># This will be empty for leaf nodes (ml nodes)
+</span>        <span class="p">{</span>
+            <span class="c1"># This is a child dict with same fields as above
+</span>        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="c1"># ..
+</span>        <span class="p">},</span>
+    <span class="p">],</span>
+    <span class="s">"child_nodes"</span><span class="p">:</span> <span class="p">[</span><span class="s">"&lt;str&gt;"</span><span class="p">,</span> <span class="s">"&lt;str&gt;"</span><span class="p">],</span> <span class="c1"># scopes (operation/module paths) of the children.
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="irene-evaluation">IrEne Evaluation</h2>
+
+<p>If you have made a new predictive model for IrEne data and want to evaluate it, populate the <code class="language-plaintext highlighter-rouge">predicted_energy</code> of each node in each json and save it in the same jsonl format, and run the following evaluation script. It’ll give you average percentage errors for each type of nodes (<code class="language-plaintext highlighter-rouge">ml</code>, <code class="language-plaintext highlighter-rouge">module</code>, <code class="language-plaintext highlighter-rouge">model</code>).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python evaluate.py /path/to/original_data.jsonl /path/to/predictions_data.jsonl
+
+<span class="c"># Example output:</span>
+<span class="c"># {</span>
+<span class="c">#     "ml": 0.6,</span>
+<span class="c">#     "module": 8.34,</span>
+<span class="c">#     "model": 3.78</span>
+<span class="c"># }</span>
+</code></pre></div></div>
+
+<p>If you want to use IrEne predictive model, see below.</p>
+
+<h2 id="training-predicting-and-evaluating-irene-model">Training, Predicting and Evaluating IrEne Model</h2>
+
+<p>To train a model with default (IrEne) configs, just run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python train.py datasets/irene_device_1.jsonl serialization_directory/irene_device_1
+<span class="c">#               ^ /path/to/irene_data.jsonl   ^ /directory/to/save/model</span>
+</code></pre></div></div>
+
+<p>By default, it takes the following config:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Default IrEne Model Config (used in the paper)
+</span><span class="p">{</span>
+    <span class="s">"feature_sets"</span><span class="p">:</span> <span class="p">[</span><span class="s">"model_specs"</span><span class="p">,</span> <span class="s">"resource_utilization"</span><span class="p">],</span> <span class="c1"># feature groups to use.
+</span>    <span class="s">"polynomial_features"</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span> <span class="c1"># whether to consider polyomial feature interaction or not.
+</span>    <span class="s">"training_strategy"</span><span class="p">:</span> <span class="s">"end2end"</span><span class="p">,</span> <span class="c1"># Options: "end2end", "stepwise", "unstructured", "none"
+</span>    <span class="s">"standardize_features"</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span> <span class="c1"># whether to scale normalize features
+</span>    <span class="s">"tanh_scalar"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="c1"># Tau from equation 3 in the paper.
+</span>    <span class="s">"normalize_loss_scale"</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span> <span class="c1"># whether to recale loss based on the scale of the nodes ground-truth energy.
+</span>    <span class="s">"weighting_setting"</span><span class="p">:</span> <span class="s">"close_to_one"</span><span class="p">,</span> <span class="c1"># Options: "exact_one", "close_to_one", "free"
+</span><span class="p">}</span>
+</code></pre></div></div>
+<p>but you can change it by passing <code class="language-plaintext highlighter-rouge">--config_filepath /path/to/my_config.json</code>.</p>
+
+<p>See docstrings of <code class="language-plaintext highlighter-rouge">train_non_ml_level_model</code> and <code class="language-plaintext highlighter-rouge">RecursiveTreeComputation</code> in <a href="https://github.com/StonyBrookNLP/irene/blob/master/lib/non_ml_level.py">lib/non_ml_level.py</a> for more explanation of these configs.</p>
+
+<p>Once you’ve the trained model, you can generate predictions as follows:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python predict.py datasets/irene_device_1.jsonl  irene_device_1_predictions.jsonl serialization_directory/irene_device_1
+<span class="c">#                 ^ /data/to/predict/on          ^ /path/to/save/predictions      ^ /path/to/saved/model/dir</span>
+<span class="c">#</span>
+<span class="c"># (it's trained and tested on same dataset just for an example)</span>
+</code></pre></div></div>
+
+<p>Finally, you can evaluate the generated predictions with:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python evaluate.py datasets/irene_device_1.jsonl irene_device_1_predictions.jsonl
+<span class="c">#                  ^ /path/with/ground-truths    ^ /path/to/saved/predictions</span>
+
+<span class="c"># Output:</span>
+<span class="c"># Percentage Error Results:</span>
+<span class="c"># {</span>
+<span class="c">#     "ml": 0.56,</span>
+<span class="c">#     "module": 8.36,</span>
+<span class="c">#     "model": 3.4</span>
+<span class="c"># }</span>
+</code></pre></div></div>
+
+<h2 id="crossvalidating-irene-models">CrossValidating IrEne Models</h2>
+
+<p>Since the dataset is of small size, we used cross-validation (leaving one transformer model type out) to evaluate the predictive models. You can run following cross-validation script, and it’ll give you a following kind of report.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python crossvalidate.py datasets/irene_device_1.jsonl serialization_directory/irene_device_1
+<span class="c">#                       ^ /path/to/irene_data.jsonl   ^ /path/to/saved/model/dir</span>
+
+<span class="c"># Percentage Error - Cross Validation Report</span>
+<span class="c">#            left-model-name  ml % error  module % error  model % error</span>
+<span class="c"># 0             roberta-base        0.71            5.49           6.91</span>
+<span class="c"># 1                     gpt2        0.63           14.92           4.88</span>
+<span class="c"># 2  distilbert-base-uncased        0.60            6.04          19.01</span>
+<span class="c"># 3               openai-gpt        0.92           14.01           2.96</span>
+<span class="c"># 4               distilgpt2        0.64           14.78           2.75</span>
+<span class="c"># 5        bert-base-uncased        0.70            5.45           3.93</span>
+<span class="c"># 6                  overall        0.70           10.12           6.74</span>
+</code></pre></div></div>
+
+<p>Here again you can pass <code class="language-plaintext highlighter-rouge">--config_filepath</code> argument.</p>
+
+<h2 id="irene-demo-and-visualization">IrEne Demo and Visualization</h2>
+
+<p>Want to look at interactive visualization of predicted energies of transformers? Head on to <a href="http://irene-viz-1.herokuapp.com/">this page</a>!</p>
+
+<h2 id="citation">Citation</h2>
+
+<p>If you find this work useful, please cite it using:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@inproceedings{cao-etal-2021-irene,
+    title = "{I}r{E}ne: Interpretable Energy Prediction for Transformers",
+    author = "Cao, Qingqing  and
+      Lal, Yash Kumar  and
+      Trivedi, Harsh  and
+      Balasubramanian, Aruna  and
+      Balasubramanian, Niranjan",
+    booktitle = "Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)",
+    month = aug,
+    year = "2021",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2021.acl-long.167",
+    pages = "2145--2157",
+}
+</code></pre></div></div>
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/StonyBrookNLP/irene">irene</a> is maintained by <a href="https://github.com/StonyBrookNLP">StonyBrookNLP</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </main>
+  </body>
+</html>

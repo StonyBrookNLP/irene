@@ -1,0 +1,10 @@
+theme: jekyll-theme-cayman
+
+title: 'IrEne'
+
+tagline: IrEne | IrEne dataset | Energy consumption | NLP model energy estimation
+
+show_downloads: false
+
+plugins:
+  - jekyll-seo-tag
